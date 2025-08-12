@@ -547,25 +547,21 @@
             fund_name: document.getElementById('fund_name').value,
         };
 
+        const body = new FormData()
+        body.append('name', formData.name)
+        body.append('email', formData.email)
+        body.append('fund_name', formData.fund_name)
+
+
         fetch(SCRIPT_URL, {
             method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/json',
-            },
             body: JSON.stringify(formData),
-            redirect: 'follow',
+            mode: 'no-cors'
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.result === 'success') {
-                formMessage.textContent = 'Thank you! We have received your request.';
-                formMessage.classList.add('text-green-400');
-                form.reset();
-            } else {
-                throw new Error(data.error || 'An unknown error occurred.');
-            }
+        .then(response => {
+            formMessage.textContent = 'Thank you! We have received your request.';
+            formMessage.classList.add('text-green-400');
+            form.reset();
         })
         .catch(error => {
             formMessage.textContent = 'An error occurred. Please try again later.';
