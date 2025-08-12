@@ -10,10 +10,10 @@
     <meta name="keywords" content="Tenxto, DeFi, real-world yield, prop trading, institutional crypto, OES custodian, secure DeFi, TENX token, crypto investing, trading capital">
     <meta name="author" content="Tenxto Foundation">
 
-    <!-- Favicon -->
-    <link rel="icon" href="/favicon.ico" sizes="any">
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <!-- Favicon (with cache-busting) -->
+    <link rel="icon" href="/favicon.ico?v=1.1" sizes="any">
+    <link rel="icon" href="/favicon.svg?v=1.1" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1.1">
 
 
     <!-- Open Graph / Facebook -->
@@ -546,17 +546,14 @@
         fetch(SCRIPT_URL, {
             method: 'POST',
             body: formData,
-            mode: 'no-cors', // This is required for Google Scripts to avoid CORS errors
+            mode: 'no-cors', 
         })
         .then(() => {
-            // Because of 'no-cors', we can't read the response.
-            // We assume success and give the user positive feedback.
             formMessage.textContent = 'Thank you! We have received your request.';
             formMessage.classList.add('text-green-400');
             form.reset();
         })
         .catch(error => {
-            // This catch block is unlikely to run with 'no-cors' but is here as a fallback.
             formMessage.textContent = 'An error occurred. Please try again later.';
             formMessage.classList.add('text-red-400');
             console.error('Error!', error);
