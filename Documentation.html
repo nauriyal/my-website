@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Meta Tags -->
+    <title>Tenxto Documentation</title>
+    <meta name="description" content="The official documentation for the Tenxto Protocol. Learn about our trust architecture, tokenomics, and how to participate as a trader or liquidity provider.">
+    <meta name="keywords" content="Tenxto, documentation, DeFi, real-world yield, prop trading, institutional crypto, OES custodian, TENX token">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.png" type="image/png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #0D1117;
+            --primary-accent: #38BDF8;
+            --secondary-accent: #2DD4BF;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --card-bg: #161B22;
+            --text-light: #C9D1D9;
+            --text-muted: #8B949E;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-muted);
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #010409; }
+        ::-webkit-scrollbar-thumb { background: #21262d; border-radius: 4px; border: 2px solid #010409;}
+        ::-webkit-scrollbar-thumb:hover { background: #30363d; }
+        
+        .sidebar-link.active {
+            background-color: rgba(56, 189, 248, 0.1);
+            color: var(--primary-accent);
+            font-weight: 600;
+        }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.5s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .prose { color: var(--text-muted); }
+        .prose h1, .prose h2, .prose h3, .prose h4, .prose strong { color: var(--text-light); }
+        .prose h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 2rem;
+            background: linear-gradient(90deg, var(--primary-accent), var(--secondary-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .prose h2 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-top: 3.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+        .prose h3 { margin-top: 2.5rem; margin-bottom: 1rem; font-weight: 600; }
+        .prose p { line-height: 1.8; margin-bottom: 1.5em; }
+        .prose a { color: var(--primary-accent); text-decoration: none; transition: color 0.2s ease-in-out; }
+        .prose a:hover { color: var(--secondary-accent); }
+        .prose code { color: var(--secondary-accent); background-color: #010409; border-radius: 0.25rem; padding: 0.2em 0.4em; font-size: 0.9em; }
+        .prose ul { padding-left: 1.5rem; }
+        .prose ul > li { margin-bottom: 0.75rem; padding-left: 0.5rem; line-height: 1.8; }
+        .prose ul > li::before { background-color: var(--primary-accent); }
+        .prose blockquote { border-left-color: var(--primary-accent); background-color: var(--card-bg); }
+        .prose table { width: 100%; }
+        .prose thead { border-bottom: 2px solid var(--border-color); }
+        .prose th { color: var(--text-light); padding: 0.75rem; text-align: left; }
+        .prose tbody tr { border-bottom: 1px solid var(--border-color); }
+        .prose td { padding: 0.75rem; }
+
+        .glass-card {
+            border-radius: 1rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+        
+        /* Calculator specific styles */
+        .calculator-container { max-width: 1600px; margin: auto; }
+        .calculator-container header { text-align: center; margin-bottom: 2rem; }
+        .calculator-container header h1 { color: var(--text-light); font-size: 2.25rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .calculator-container header p { font-size: 1.1rem; color: var(--text-muted); max-width: 700px; margin: 0 auto; }
+        
+        .calculator-main-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 2rem; align-items: flex-start; }
+        @media (max-width: 1200px) { .calculator-main-grid { grid-template-columns: 1fr; } }
+        
+        .calculator-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem; }
+        .calculator-card { background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-color); padding: 1.5rem; display: flex; flex-direction: column; }
+        .calculator-card-header { color: var(--primary-accent); border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem; }
+        .calculator-card-header h3 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+        .input-group { margin-bottom: 1.25rem; }
+        .input-group label { display: flex; justify-content: space-between; align-items: center; font-weight: 500; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--text-muted); }
+        .input-group input[type="range"] { width: 100%; margin-top: 0.25rem; accent-color: var(--primary-accent); }
+        .input-group input[type="number"] { width: 100%; background: #010409; border: 1px solid var(--border-color); border-radius: 6px; padding: 0.5rem 0.75rem; color: var(--text-light); }
+        .slider-value { font-weight: 600; color: var(--primary-accent); background-color: rgba(56, 189, 248, 0.1); padding: 0.25rem 0.5rem; border-radius: 6px; }
+        
+        .explanation-panel { background: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-color); padding: 1.5rem; position: sticky; top: 2rem; height: calc(100vh - 4rem); overflow-y: auto; }
+        @media (max-width: 1200px) { .explanation-panel { position: static; height: auto; margin-top: 2rem; } }
+        .explanation-panel h2 { margin-top: 0; color: var(--primary-accent); border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1.5rem; }
+        .accordion-item { border-bottom: 1px solid var(--border-color); }
+        .accordion-header { cursor: pointer; font-weight: 600; padding: 1rem 0; display: flex; justify-content: space-between; align-items: center; }
+        .accordion-header::after { content: '+'; font-size: 24px; transition: transform 0.3s ease; color: var(--primary-accent); }
+        .accordion-item.active .accordion-header::after { transform: rotate(45deg); }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+        .accordion-content p { margin: 0 0 1rem 0; padding-left: 1rem; border-left: 3px solid var(--primary-accent); font-size: 0.9rem; color: var(--text-muted); }
+        
+        .financial-statement { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .financial-statement td { padding: 0.75rem; border-bottom: 1px solid var(--border-color); }
+        .financial-statement td:last-child { text-align: right; font-weight: 600; }
+        .financial-statement .sub-item td:first-child { padding-left: 2rem; }
+        .financial-statement .header-row { background-color: rgba(56, 189, 248, 0.05); font-weight: 700; color: var(--primary-accent); }
+        .financial-statement .total-row { font-weight: 700; border-top: 2px solid var(--border-color); background-color: #010409; }
+        .financial-statement .final-total-row { font-weight: 700; font-size: 1rem; border-top: 2px solid var(--primary-accent); background-color: rgba(56, 189, 248, 0.1); }
+        .financial-statement .loss { color: #f87171; }
+        .financial-statement .profit { color: var(--secondary-accent); }
+        .kpi-card { grid-column: 1 / -1; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 bg-black/30 backdrop-blur-lg w-72 p-6 border-r border-[var(--border-color)] transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out z-20 flex flex-col">
+            <div>
+                <div class="flex items-center gap-3 mb-10">
+                    <h1 class="text-2xl font-bold text-white">Ten<span class="text-[var(--primary-accent)]">x</span>to</h1>
+                </div>
+                <nav id="nav-menu" class="flex-grow space-y-6">
+                    <div>
+                        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-4">Introduction</h2>
+                        <ul class="space-y-1">
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="introduction">Introduction</a></li>
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="the-problem">The Problem</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-4">The Tenxto Solution</h2>
+                        <ul class="space-y-1">
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="trust-architecture">The Trust Architecture</a></li>
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="system-architecture">System Architecture</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-4">For Participants</h2>
+                        <ul class="space-y-1">
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="for-defi-lps">For DeFi LPs</a></li>
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="for-traders">For Traders</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-4">Tokenomics</h2>
+                        <ul class="space-y-1">
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="tenx-token">The $TENX Token</a></li>
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="token-allocation">Token Allocation</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-4">Go-To-Market</h2>
+                        <ul class="space-y-1">
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="genesis-campaign">The Genesis Ascent</a></li>
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="anti-dump-loyalty">Anti-Dump & Loyalty</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-4">Financial Models</h2>
+                        <ul class="space-y-1">
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="funded-program-calculator">Funded Program Calculator</a></li>
+                            <li><a href="#" class="sidebar-link block px-4 py-2 rounded-md hover:bg-[var(--card-bg)] hover:text-white transition-colors duration-200" data-target="brokerage-calculator">Brokerage Calculator</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </aside>
+
+        <button id="menu-toggle" class="md:hidden fixed top-4 left-4 z-30 p-2 bg-[var(--card-bg)] rounded-md text-white">
+            <svg id="menu-open-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+
+        <main class="flex-1 p-6 md:p-12 md:pl-80">
+            <div class="max-w-4xl mx-auto">
+                
+                <section id="introduction" class="content-section prose max-w-none">
+                    <h1>Introduction</h1>
+                    <p>For the 15 million retail traders across the globe, a single barrier stands between talent and a professional career: <strong>capital</strong>. The current solution, the proprietary trading industry, offers a broken ladder—an opaque, untrustworthy system that often profits from trader failure. Simultaneously, the world of Decentralized Finance (DeFi) holds trillions in liquid assets, a powerful engine of capital that is desperately seeking safe, sustainable, <strong>real-world yield</strong>.</p>
+                    <p><strong>Tenxto is the bridge.</strong> We are building the world's first on-chain career ladder for traders, a trust protocol for global trading talent.</p>
+                    <p>We have created a hybrid financial ecosystem that solves this fundamental disconnect by creating a symbiotic relationship between on-chain liquidity and off-chain, regulated trading. More profoundly, we are bringing a real-world, revenue-generating business—our regulated brokerage—on-chain, allowing anyone, anywhere, to own a piece of its success through the TENX token.</p>
+                </section>
+
+                <section id="the-problem" class="content-section prose max-w-none">
+                    <h1>The Problem: A Disconnected Market</h1>
+                    <h2>The Trader's Dilemma: The Prop Firm Paradox</h2>
+                    <p>The proprietary trading industry, a market valued at over $6.8 billion, emerged with a powerful promise: "Prove your skill, and we will provide the capital." However, this model is fundamentally broken:</p>
+                    <ul>
+                        <li><strong>A Crisis of Trust:</strong> The vast majority of prop firms are not brokers. They operate using their own opaque, off-chain capital, creating a direct conflict of interest. Their business model is often more profitable when traders <strong>fail</strong> their evaluations.</li>
+                        <li><strong>A Failure to Scale:</strong> Because they rely on private balance sheets, these firms are structurally incapable of scaling to meet the demand from a global talent pool. Their capital is finite, capping the opportunity they can offer.</li>
+                    </ul>
+                    <h2>The DeFi Yield Dilemma</h2>
+                    <p>Simultaneously, the DeFi market, projected to exceed $230 billion by 2030, holds trillions of dollars in liquid assets. This capital has a singular, relentless need: to find sustainable, real-world yield. Yet, most DeFi yields are speculative and unsustainable, often derived from inflationary token emissions rather than tangible economic activity. Institutional capital is blocked by the lack of compliant, secure, and trustworthy on-ramps to real-world yield sources.</p>
+                    <blockquote>We are left with two massive, disconnected markets: a world of talent desperate for trustworthy capital, and a world of capital desperate for trustworthy yield.</blockquote>
+                </section>
+
+                <section id="trust-architecture" class="content-section prose max-w-none">
+                    <h1>The Trust Architecture</h1>
+                    <p>The promise of connecting DeFi with real-world assets is worthless without an architecture that guarantees institutional-grade safety and trust. Tenxto has been designed from the ground up to solve this problem. We have built a multi-layered fortress of trust that systematically de-risks our protocol for the world's most sophisticated capital allocators.</p>
+                    
+                    <h2>Our Security Pillars</h2>
+                    <div class="not-prose grid md:grid-cols-2 gap-6 my-8">
+                        <div class="flex items-start gap-4"><div class="text-2xl font-bold text-primary-accent">1.</div><div><strong class="text-light block">Audited Smart Contracts</strong>All core logic is handled by smart contracts that undergo rigorous, independent audits from top-tier security firms.</div></div>
+                        <div class="flex items-start gap-4"><div class="text-2xl font-bold text-primary-accent">2.</div><div><strong class="text-light block">Regulated Custodianship</strong>All capital is held by a regulated, third-party OES Custodian. Your principal is never held on the brokerage's balance sheet.</div></div>
+                        <div class="flex items-start gap-4"><div class="text-2xl font-bold text-primary-accent">3.</div><div><strong class="text-light block">Advanced Wallet Security</strong>The treasury is secured using Multi-Party Computation (MPC) technology, which eliminates single points of failure.</div></div>
+                        <div class="flex items-start gap-4"><div class="text-2xl font-bold text-primary-accent">4.</div><div><strong class="text-light block">Regulatory Licensing</strong>Our client-facing operations are conducted through a fully licensed brokerage entity for global compliance.</div></div>
+                        <div class="flex items-start gap-4"><div class="text-2xl font-bold text-primary-accent">5.</div><div><strong class="text-light block">DAO Governance</strong>The entire ecosystem is controlled by TENX token holders, ensuring decentralized governance and alignment.</div></div>
+                    </div>
+                </section>
+
+                <section id="system-architecture" class="content-section prose max-w-none">
+                    <h1>System Architecture</h1>
+                    <p>Tenxto's architecture is composed of three distinct but interconnected layers, firewalled by our OES Custodian.</p>
+                    <div class="not-prose my-10 p-8 glass-card">
+                      
+                    </div>
+                    <h3>1. The Capital Layer: The Tenxto DeFi Protocol</h3>
+                    <p>This is the on-chain foundation of our ecosystem. It consists of a series of audited smart contracts that allow users to deposit capital and receive yield. It features multi-asset pools (USDC, ETH, wBTC), a permissioned on-ramp for institutional compliance, and liquid receipt tokens for composability.</p>
+                    <h3>2. The Trust Layer: The OES Custodian Bridge</h3>
+                    <p>This is our most critical innovation. All capital from the DeFi Protocol is held by a regulated, third-party OES Custodian. It ensures segregation of funds and only settles the net Profit and Loss (PnL) from the funded traders' activities with the brokerage.</p>
+                    <h3>3. The Revenue Layer: The Tenxto Brokerage & Engines</h3>
+                    <p>This layer is where our commercial activity takes place, generating the revenue that powers the entire ecosystem. It includes our regulated brokerage, the "Proof of Skill" evaluation engine, and our proprietary AI Trading Engine.</p>
+                </section>
+
+                <section id="for-defi-lps" class="content-section prose max-w-none">
+                    <h1>For DeFi LPs: A New Asset Class</h1>
+                    <p>Tenxto provides Liquidity Providers with access to a new, sustainable asset class: a real-world yield generated from the tangible economic activity of the global trading markets. This yield is derived from high-margin challenge fees, profit splits from successful traders, and our proprietary AI trading engine, offering a stable, non-speculative return that is desperately needed in the DeFi space.</p>
+                    <h2>How it Works</h2>
+                    <ol>
+                        <li><strong>Deposit Capital:</strong> LPs deposit assets like USDC, ETH, or wBTC into our secure, audited liquidity pools.</li>
+ 			<br>
+                        <li><strong>Receive Liquid Tokens:</strong> Upon depositing, LPs receive a yield-bearing liquid receipt token (e.g., stUSDC, stETH). These tokens are freely tradable and represent your claim on the underlying capital and accrued yield.</li>
+<br>
+                        <li><strong>Earn Real Yield:</strong> Your deposited capital is put to work through our trust-minimized architecture, generating revenue from our brokerage operations. This yield is distributed back to the pools, increasing the value of your liquid staking tokens.</li>
+<br>
+                    </ol>
+                </section>
+
+                <section id="for-traders" class="content-section prose max-w-none">
+                    <h1>For Traders: A Transparent Career Path</h1>
+                    <p>Tenxto provides a meritocratic pathway to a professional trading career. We offer access to a deep, scalable, and <strong>provably real</strong> pool of capital. Our innovative "Proof of Skill" model ensures that talent—not personal wealth—is the only prerequisite for success.</p>
+                    <h2>The "Proof of Skill" Engine</h2>
+                    <p>Our model offers two pathways to funding:</p>
+                    <ul>
+                        <li><strong>The Genesis Challenge:</strong> A fair, transparent, multi-phase evaluation for new traders to prove their profitability and risk management skills.</li>
+                        <li><strong>The "Pro" Account:</strong> A merit-based system for existing, skilled traders on our brokerage. By demonstrating consistent profitability or by posting a small first-loss collateral, traders can bypass the challenge fee and gain direct access to a funded account.</li>
+                    </ul>
+                </section>
+
+                <section id="tenx-token" class="content-section prose max-w-none">
+                    <h1>The $TENX Token</h1>
+                    <p>The TENX token is the economic engine that captures and distributes the value created by the Tenxto ecosystem. It is designed with a "real-yield" model to ensure its value is directly tied to the platform's success, not inflationary emissions. It represents a stake in a real-world business, brought on-chain.</p>
+                    <h2>Token Utility</h2>
+                    <ul>
+                        <li><strong>Staking & Yield (sTENX):</strong> TENX holders can stake their tokens to receive sTENX. All net revenue generated by the platform flows to the DAO Treasury, which programmatically buys back TENX on the open market and distributes it to the sTENX staking pool. This means sTENX holders receive a direct share of the platform's profits.</li>
+                        <li><strong>Governance:</strong> sTENX holders will have voting rights in the Tenxto DAO, allowing them to shape the future of the protocol.</li>
+                        <li><strong>Loyalty Multipliers:</strong> Holding TENX or sTENX will grant users a permanent points multiplier in all future rewards campaigns ("Seasons"), rewarding long-term believers.</li>
+                    </ul>
+                </section>
+
+                <section id="token-allocation" class="content-section prose max-w-none">
+                    <h1>Token Allocation</h1>
+                    <p>Our token distribution is designed to be community-first, ensuring broad participation and long-term alignment.</p>
+                    <div class="not-prose my-10 overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-[var(--card-bg)]">
+                                <tr><th>Category</th><th>Allocation (%)</th><th>Rationale & Vesting</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Community & Ecosystem</strong></td><td>30%</td><td>The Engine of Growth. Used for the Genesis Airdrop, liquidity mining, staking rewards, and DAO grants.</td></tr>
+                                <tr><td><strong>Core Contributors</strong></td><td>30%</td><td>Long-Term Alignment. Standard 3-year monthly vesting with a 6-month cliff.</td></tr>
+                                <tr><td><strong>Investors (All Rounds)</strong></td><td>25%</td><td>Strategic Capital for pre-seed and future funding rounds.</td></tr>
+                                <tr><td><strong>Foundation / Treasury</strong></td><td>15%</td><td>Long-Term Sustainability for operational runway, partnerships, and initial liquidity.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="genesis-campaign" class="content-section prose max-w-none">
+                    <h1>The Genesis Ascent: An Economic Mobilization</h1>
+                    <p>The launch of a new protocol is a singular moment of opportunity. Historically, airdrops have been a marketing expenditure. We believe this is flawed. The Tenxto Genesis Ascent is an economic mobilization event designed to bootstrap our multi-sided marketplace. It is not a giveaway; it is an act of economic creation.</p>
+                    <h2>The Three-Pillar Incentive Architecture</h2>
+                    <p>The Genesis Ascent is built upon a three-pillar structure to create an ecosystem-wide growth engine that aligns all stakeholders: users, partners, and long-term token holders.</p>
+                    <ul>
+                        <li><strong>TENX Points (The User Flywheel):</strong> This is the foundational "Proof of Value" layer. Every on-chain action that adds value—providing liquidity (LPs) or generating revenue (Traders)—is quantified and rewarded with points, directly linking contribution to ownership.</li>
+                        <li><strong>TENX Catalyst (The Partner Flywheel):</strong> This pillar transforms our affiliate model. A dedicated pool of rewards, branded as TENX Catalyst, is distributed to vetted partners (educators, KOLs). Partners are programmatically required to pass the majority of these rewards to the end-users they onboard, turning them into vested ecosystem stakeholders.</li>
+                        <li><strong>TENX Multipliers (The Loyalty Flywheel):</strong> This layer ensures long-term value accrual. It includes pre-TGE multipliers to guide user behavior (e.g., rewarding early liquidity) and a powerful post-TGE "Loyalty Lock" multiplier that provides a permanent boost to future rewards for users who stake their airdropped TENX.</li>
+                    </ul>
+                    <h2>The Points Engine: Rewarding Value</h2>
+                    <p>The points system is bifurcated to address the unique contributions of our two primary user groups: capital providers and talent.</p>
+                    <h3>For Capital Providers (LPs): The Liquidity Epochs</h3>
+                    <p>The objective is to bootstrap the DeFi Capital Layer with deep, stable liquidity. The system rewards not just the amount of capital, but also the duration of the commitment.</p>
+                    <h3>For Talent (Traders): The "Volume & Skill is Ownership" Mandate</h3>
+                    <p>For traders, the points system is designed to convert their primary activities—paying for challenges, trading, and generating profit—into an ownership stake. A key innovation is a significant reward for realized profit (P&L), creating a powerful marketing narrative: "At Tenxto, your skill doesn't just earn you profits; it earns you ownership."</p>
+                </section>
+
+                <section id="anti-dump-loyalty" class="content-section prose max-w-none">
+                    <h1>Anti-Dump & Loyalty Mechanisms</h1>
+                    <p>A successful token launch is measured by its stability and value accrual in the months that follow. To fortify the TENX token economy, we are implementing a robust set of anti-dumping and long-term alignment mechanisms.</p>
+                    <h2>Multi-Tiered Vesting Schedule</h2>
+                    <p>To balance user experience with market stability, we will use a tiered vesting schedule for the airdrop based on final points ranking. This provides immediate liquidity to the broad community base while neutralizing the market impact of the largest "whale" recipients.</p>
+                    <div class="not-prose my-10 overflow-x-auto">
+                        <table class="min-w-full">
+                            <thead class="bg-[var(--card-bg)]">
+                                <tr><th>Points Rank Tier</th><th>% Unlocked at TGE</th><th>Vesting Schedule for Remainder</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr><td><strong>Tier 1 (Top 1-500)</strong></td><td>25%</td><td>75% vested linearly over 12 months, with a 3-month cliff.</td></tr>
+                                <tr><td><strong>Tier 2 (Rank 501-2,000)</strong></td><td>50%</td><td>50% vested linearly over 6 months.</td></tr>
+                                <tr><td><strong>Tier 3 (Rank 2,001+)</strong></td><td>100%</td><td>N/A (Fully Unlocked)</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <h2>The "Loyalty Lock" Multiplier</h2>
+                    <p>This is the core mechanism for Season 2. A 7-day "Loyalty Lock" window will open with the airdrop claim. Users who choose to stake their newly claimed TENX tokens (into sTENX) or provide liquidity will receive a permanent, significant points multiplier (e.g., 2.0x) on all points earned in all future seasons. This creates a powerful game-theoretic choice: realize a short-term gain by selling, or lock the token to gain a significant long-term advantage.</p>
+                </section>
+
+                <section id="funded-program-calculator" class="content-section calculator-container">
+                    <!-- Funded Program Calculator HTML is dynamically injected here -->
+                </section>
+
+                <section id="brokerage-calculator" class="content-section calculator-container">
+                    <!-- Brokerage Calculator HTML is dynamically injected here -->
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript for Interactivity -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.getElementById('menu-toggle');
+            const menuOpenIcon = document.getElementById('menu-open-icon');
+            const menuCloseIcon = document.getElementById('menu-close-icon');
+            const mainContent = document.querySelector('main');
+
+            const navLinks = document.querySelectorAll('.sidebar-link');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            function navigateTo(targetId) {
+                contentSections.forEach(section => {
+                    section.classList.toggle('active', section.id === targetId);
+                });
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.dataset.target === targetId);
+                });
+                mainContent.scrollTop = 0;
+                window.location.hash = targetId;
+
+                if (window.innerWidth < 768) {
+                    sidebar.classList.add('-translate-x-full');
+                    menuOpenIcon.classList.remove('hidden');
+                    menuCloseIcon.classList.add('hidden');
+                }
+            }
+
+            const initialTarget = window.location.hash ? window.location.hash.substring(1) : 'introduction';
+            navigateTo(initialTarget);
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.dataset.target;
+                    if (targetId) navigateTo(targetId);
+                });
+            });
+
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('-translate-x-full');
+                menuOpenIcon.classList.toggle('hidden');
+                menuCloseIcon.classList.toggle('hidden');
+            });
+            
+            // --- Calculator Injection ---
+            const fundedCalculatorHTML = `
+                <header>
+                    <h1>Funded Program Profitability</h1>
+                    <p>An interactive model to simulate financial outcomes by adjusting key business drivers.</p>
+                </header>
+                <div class="calculator-main-grid">
+                    <div class="calculator-content">
+                        <div class="calculator-grid">
+                            <div class="calculator-card">
+                                <div class="calculator-card-header"><h3>Trader Acquisition & Funnel</h3></div>
+                                <div class="input-group"><label for="monthlyNewTraders">Monthly New Traders <span class="slider-value" id="monthlyNewTradersValue">1000</span></label><input type="range" id="monthlyNewTraders" min="100" max="5000" step="100" value="1000"></div>
+                                <div class="input-group"><label for="cac">Customer Acquisition Cost (CAC) <span class="slider-value" id="cacValue">$10.68</span></label><input type="range" id="cac" min="2" max="50" step="0.5" value="10.68"></div>
+                                <div class="input-group"><label for="passRate1Step">1-Step Challenge Pass Rate (%) <span class="slider-value" id="passRate1StepValue">8.0</span></label><input type="range" id="passRate1Step" min="1" max="20" step="0.1" value="8.0"></div>
+                                <div class="input-group"><label for="passRate2StepP1">2-Step Pass Rate (Phase 1 %) <span class="slider-value" id="passRate2StepP1Value">10.59</span></label><input type="range" id="passRate2StepP1" min="1" max="30" step="0.01" value="10.59"></div>
+                                <div class="input-group"><label for="passRate2StepP2">2-Step Pass Rate (Phase 2 %) <span class="slider-value" id="passRate2StepP2Value">23.6</span></label><input type="range" id="passRate2StepP2" min="10" max="70" step="0.1" value="23.6"></div>
+                                <div class="input-group"><label for="resetRate">Reset/Add-on Rate (%) <span class="slider-value" id="resetRateValue">15</span></label><input type="range" id="resetRate" min="0" max="50" step="1" value="15"></div>
+                            </div>
+                            <div class="calculator-card">
+                                <div class="calculator-card-header"><h3>Funded Trader Performance & Risk</h3></div>
+                                <div class="input-group"><label for="payoutAchievementRate">Payout Achievement Rate (%) <span class="slider-value" id="payoutAchievementRateValue">23.8</span></label><input type="range" id="payoutAchievementRate" min="10" max="50" step="0.1" value="23.8"></div>
+                                <div class="input-group"><label for="avgMonthlyProfit">Avg. Monthly Profit (%) <span class="slider-value" id="avgMonthlyProfitValue">5.0</span></label><input type="range" id="avgMonthlyProfit" min="1" max="15" step="0.1" value="5"></div>
+                                <div class="input-group"><label for="firmProfitSplit">Firm's Profit Split (%) <span class="slider-value" id="firmProfitSplitValue">20</span></label><input type="range" id="firmProfitSplit" min="10" max="50" step="1" value="20"></div>
+                                <div class="input-group"><label for="aBookAllocation">% of Passed Traders on A-Book<span class="slider-value" id="aBookAllocationValue">50</span></label><input type="range" id="aBookAllocation" min="0" max="100" step="5" value="50"></div>
+                                <div class="input-group"><label for="aBookMaxLossRate">% of A-Book Incurring Max Loss<span class="slider-value" id="aBookMaxLossRateValue">50</span></label><input type="range" id="aBookMaxLossRate" min="0" max="100" step="5" value="50"></div>
+                            </div>
+                            <div class="calculator-card kpi-card">
+                                <div class="calculator-card-header"><h3>Annual Financial Statement (Pro-Forma)</h3></div>
+                                <table class="financial-statement"><tbody><tr class="header-row"><td>Revenue</td><td></td></tr><tr class="sub-item"><td>Gross Fee Revenue</td><td id="fs-gross-fees">$0</td></tr><tr class="sub-item"><td>Reset & Add-on Revenue</td><td id="fs-ancillary-revenue">$0</td></tr><tr class="sub-item"><td>Gross Trading Profit (B-Book)</td><td id="fs-bbook-profit">$0</td></tr><tr class="sub-item"><td>Gross Trading Profit (A-Book)</td><td id="fs-abook-profit">$0</td></tr><tr class="total-row"><td>Total Revenue</td><td id="fs-total-revenue">$0</td></tr><tr class="header-row"><td>Cost of Revenue</td><td></td></tr><tr class="sub-item"><td>Trader Payouts</td><td id="fs-payouts" class="loss">($0)</td></tr><tr class="total-row"><td>Gross Profit</td><td id="fs-gross-profit">$0</td></tr><tr class="header-row"><td>Operating Expenses (OPEX)</td><td></td></tr><tr class="sub-item"><td>Marketing (CAC)</td><td id="fs-marketing" class="loss">($0)</td></tr><tr class="sub-item"><td>Evaluation Fee Refunds</td><td id="fs-refunds" class="loss">($0)</td></tr><tr class="sub-item"><td>Total A-Book Losses</td><td id="fs-abook-losses" class="loss">($0)</td></tr><tr class="sub-item"><td>Technology License Fees</td><td id="fs-tech" class="loss">($0)</td></tr><tr class="sub-item"><td>General & Administrative</td><td id="fs-ga" class="loss">($0)</td></tr><tr class="total-row"><td>Total OPEX</td><td id="fs-total-opex" class="loss">($0)</td></tr><tr class="final-total-row"><td>EBITDA</td><td id="fs-ebitda">$0</td></tr></tbody></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="explanation-panel">
+                        <h2>Input Explanations</h2>
+                        <div class="accordion-item"><div class="accordion-header">Trader Acquisition & Funnel</div><div class="accordion-content"><p><strong>Monthly New Traders:</strong> The number of new traders purchasing an evaluation challenge each month. This is the primary driver for the top of the sales funnel.</p><p><strong>Customer Acquisition Cost (CAC):</strong> The average marketing and sales cost to acquire one new trader. A lower CAC is crucial for profitability.</p><p><strong>1-Step & 2-Step Pass Rates:</strong> The percentage of traders who successfully pass each type of evaluation. The model calculates the final pass rate for 2-step challenges by multiplying the two phase percentages.</p><p><strong>Reset/Add-on Rate:</strong> The percentage of traders who fail but pay an additional fee to reset their account or buy add-ons. A key source of ancillary revenue.</p></div></div>
+                        <div class="accordion-item"><div class="accordion-header">Funded Trader Performance & Risk</div><div class="accordion-content"><p><strong>Payout Achievement Rate:</strong> The percentage of traders who *pass an evaluation* and go on to receive at least one payout. These are the firm's most successful traders.</p><p><strong>Avg. Monthly Profit (%):</strong> The expected monthly profit generated by a successful, payout-eligible trader, as a percentage of their notional account size.</p><p><strong>Firm's Profit Split (%):</strong> The percentage of trading profits the firm retains. A typical split is 80/20, meaning the firm keeps 20%.</p><p><strong>% of Passed Traders on A-Book:</strong> A critical risk-management decision. This is the percentage of *all passed traders* that the firm chooses to place on a live-risk "A-Book," exposing the firm's own capital to their trades.</p><p><strong>% of A-Book Incurring Max Loss:</strong> Of the traders placed on the A-Book, this is the percentage expected to fail and lose the maximum drawdown (assumed at 8%).</p></div></div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('funded-program-calculator').innerHTML = fundedCalculatorHTML;
+
+            const brokerageCalculatorHTML = `
+                <header>
+                    <h1>Brokerage Profitability Calculator</h1>
+                    <p>An interactive model to simulate financial outcomes by adjusting key business drivers.</p>
+                </header>
+                <div class="calculator-main-grid">
+                    <div class="calculator-content">
+                        <div class="calculator-grid">
+                            <div class="calculator-card">
+                                <div class="calculator-card-header"><h3>Core Business Drivers</h3></div>
+                                <div class="input-group"><label for="initialUsers">Starting Active Users</label><input type="number" id="initialUsers" value="5000" step="100"></div>
+                                <div class="input-group"><label for="avgTradingCapital">Avg. Trading Capital / User ($)</label><input type="number" id="avgTradingCapital" value="2000" step="100"></div>
+                                <div class="input-group"><label for="avgMonthlyVolume">Avg. Monthly Volume / User (Lots)</label><input type="number" id="avgMonthlyVolume" value="20" step="1"></div>
+                                <div class="input-group"><label for="aBookSplit">A-Book / B-Book Split <span class="slider-value" id="aBookSplitValue">40% A-Book</span></label><input type="range" id="aBookSplit" min="0" max="100" value="40"></div>
+                                <div class="input-group"><label for="bBookNetPNLCaptureRate">Net % profit captured from B-book Traders <span class="slider-value" id="bBookNetPNLCaptureRateValue">45%</span></label><input type="range" id="bBookNetPNLCaptureRate" min="0" max="100" value="45"></div>
+                                <div class="input-group"><label for="positionsHeldOvernight">% of Positions Held Overnight <span class="slider-value" id="positionsHeldOvernightValue">35%</span></label><input type="range" id="positionsHeldOvernight" min="0" max="100" value="35"></div>
+                            </div>
+                            <div class="calculator-card">
+                                <div class="calculator-card-header"><h3>Revenue & Cost Parameters</h3></div>
+                                <div class="input-group"><label for="avgABookSpreadMarkup">Avg. A-Book Spread Markup (pips)</label><input type="number" id="avgABookSpreadMarkup" value="0.8" step="0.1"></div>
+                                <div class="input-group"><label for="avgBBookSpread">Avg. B-Book Spread (pips)</label><input type="number" id="avgBBookSpread" value="1.5" step="0.1"></div>
+                                <div class="input-group"><label for="avgCommissionPerLot">Avg. Commission per Lot ($)</label><input type="number" id="avgCommissionPerLot" value="6.00" step="0.5"></div>
+                                <div class="input-group"><label for="avgSwapRevenuePerLotDay">Avg. Swap Revenue per Lot/Day ($)</label><input type="number" id="avgSwapRevenuePerLotDay" value="1.50" step="0.1"></div>
+                                <div class="input-group"><label for="monthlyFixedOpEx">Monthly Fixed OpEx ($)</label><input type="number" id="monthlyFixedOpEx" value="100000" step="5000"></div>
+                                <div class="input-group"><label for="variableCostsPercent">Variable Costs (% of Revenue) <span class="slider-value" id="variableCostsPercentValue">10%</span></label><input type="range" id="variableCostsPercent" min="0" max="30" value="10"></div>
+                            </div>
+                            <div class="calculator-card">
+                                <div class="calculator-card-header"><h3>Growth & Retention</h3></div>
+                                <div class="input-group"><label for="initialNewUsers">Initial New Users / Month</label><input type="number" id="initialNewUsers" value="500" step="10"></div>
+                                <div class="input-group"><label for="userGrowthRate">Monthly Growth Rate for New Users (%) <span class="slider-value" id="userGrowthRateValue">5%</span></label><input type="range" id="userGrowthRate" min="0" max="100" value="5"></div>
+                                <div class="input-group"><label for="brokerage_cac">Client Acquisition Cost (CAC) ($)</label><input type="number" id="brokerage_cac" value="800" step="50"></div>
+                                <div class="input-group"><label for="monthlyChurnRate">Monthly Churn Rate (%) <span class="slider-value" id="monthlyChurnRateValue">5%</span></label><input type="range" id="monthlyChurnRate" min="1" max="20" value="5"></div>
+                            </div>
+                            <div class="calculator-card kpi-card">
+                                <div class="calculator-card-header"><h3>Annual Financial Statement (Pro-Forma)</h3></div>
+                                <table class="financial-statement"><tbody><tr class="header-row"><td>Revenue</td><td></td></tr><tr class="sub-item"><td>A-Book Revenue</td><td id="annual-table-revenue-abook">$0</td></tr><tr class="sub-item"><td>B-Book Revenue</td><td id="annual-table-revenue-bbook">$0</td></tr><tr class="sub-item"><td>Swap Revenue</td><td id="annual-table-revenue-swap">$0</td></tr><tr class="total-row"><td>Total Revenue</td><td id="annual-table-revenue-total">$0</td></tr><tr class="header-row"><td>Costs</td><td></td></tr><tr class="sub-item"><td>Staff Salaries & Overheads</td><td id="annual-table-costs-staff" class="loss">($0)</td></tr><tr class="sub-item"><td>Technology & Licensing</td><td id="annual-table-costs-tech" class="loss">($0)</td></tr><tr class="sub-item"><td>Marketing & Sales (CAC)</td><td id="annual-table-costs-marketing" class="loss">($0)</td></tr><tr class="sub-item"><td>Liquidity & Clearing Fees</td><td id="annual-table-costs-liquidity" class="loss">($0)</td></tr><tr class="sub-item"><td>Payment Processing & Other</td><td id="annual-table-costs-psp" class="loss">($0)</td></tr><tr class="total-row"><td>Total Costs</td><td id="annual-table-costs-total" class="loss">($0)</td></tr><tr class="final-total-row"><td>EBITDA</td><td id="annual-table-ebitda">$0</td></tr><tr class="final-total-row"><td>Net Profit (9.5% Tax)</td><td id="annual-table-netprofit">$0</td></tr></tbody></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="explanation-panel">
+                        <h2>Input Explanations</h2>
+                        <div class="accordion-item"><div class="accordion-header">Core Business Drivers</div><div class="accordion-content"><p><strong>Starting Active Users:</strong> The number of active clients at the beginning of the year. The model projects growth from this baseline.</p><p><strong>Avg. Trading Capital / User ($):</strong> The average account balance per user. On the B-Book, higher capital can increase potential P&L revenue but also elevates risk exposure.</p><p><strong>Avg. Monthly Volume / User (Lots):</strong> A measure of client trading activity per month. Directly drives A-Book revenue through spreads and commissions.</p><p><strong>A-Book / B-Book Split:</strong> The strategic allocation of trade volume. A-Book (agency) is low-risk, volume-based profit. B-Book (principal) is high-risk, high-reward, internalizing trades to profit from net client losses.</p><p><strong>Net % profit captured from B-book Traders:</strong> The core of B-Book profitability. Represents the net percentage of B-Book client losses captured as revenue after paying out all client wins.</p><p><strong>% of Positions Held Overnight:</strong> The portion of trade volume subject to overnight financing (swap) fees. This provides a stable, predictable revenue stream.</p></div></div>
+                        <div class="accordion-item"><div class="accordion-header">Revenue & Cost Parameters</div><div class="accordion-content"><p><strong>Avg. A-Book Spread Markup (pips):</strong> The broker's profit margin added to the raw spread received from liquidity providers for A-Book trades.</p><p><strong>Avg. B-Book Spread (pips):</strong> The full bid-ask spread on B-Book trades, which is captured as direct revenue.</p><p><strong>Avg. Commission per Lot ($):</strong> A fixed fee charged per trade, most common on A-Book/ECN accounts.</p><p><strong>Avg. Swap Revenue per Lot/Day ($):</strong> The net interest earned for holding a standard 1-lot position overnight.</p><p><strong>Monthly Fixed OpEx ($):</strong> Total recurring operational costs for the month, including salaries, rent, and technology licensing.</p><p><strong>Variable Costs (% of Revenue):</strong> Costs that scale with business activity, such as payment processing fees, liquidity provider charges, and some platform fees.</p></div></div>
+                        <div class="accordion-item"><div class="accordion-header">Growth & Retention</div><div class="accordion-content"><p><strong>Initial New Users / Month:</strong> The number of new funded accounts opened in the first month. This is the baseline for the growth calculation.</p><p><strong>Monthly Growth Rate for New Users (%):</strong> The compounding monthly growth rate of new user acquisition.</p><p><strong>Client Acquisition Cost (CAC) ($):</strong> The total average marketing and sales cost required to acquire one new depositing client.</p><p><strong>Monthly Churn Rate (%):</strong> The percentage of active clients who stop trading each month. A lower churn rate increases the average Client Lifespan and Lifetime Value (LTV).</p></div></div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('brokerage-calculator').innerHTML = brokerageCalculatorHTML;
+            
+            // --- Re-initialize all calculator logic after injection ---
+            initializeFundedCalculator();
+            initializeBrokerageCalculator();
+        });
+
+        function initializeFundedCalculator() {
+            const container = document.getElementById('funded-program-calculator');
+            if (!container) return;
+            const inputs = container.querySelectorAll('input');
+            if (inputs.length === 0) return;
+
+            function formatCurrency(value, withParentheses = false) {
+                const formatted = Math.abs(value).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+                return withParentheses ? `(${formatted})` : formatted;
+            }
+
+            function calculateProfitability() {
+                const monthlyNewTraders = parseFloat(container.querySelector('#monthlyNewTraders').value);
+                const cac = parseFloat(container.querySelector('#cac').value);
+                const passRate1Step = parseFloat(container.querySelector('#passRate1Step').value) / 100;
+                const passRate2StepP1 = parseFloat(container.querySelector('#passRate2StepP1').value) / 100;
+                const passRate2StepP2 = parseFloat(container.querySelector('#passRate2StepP2').value) / 100;
+                const resetRate = parseFloat(container.querySelector('#resetRate').value) / 100;
+                const payoutAchievementRate = parseFloat(container.querySelector('#payoutAchievementRate').value) / 100;
+                const avgMonthlyProfit = parseFloat(container.querySelector('#avgMonthlyProfit').value) / 100;
+                const firmProfitSplit = parseFloat(container.querySelector('#firmProfitSplit').value) / 100;
+                const aBookAllocation = parseFloat(container.querySelector('#aBookAllocation').value) / 100;
+                const aBookMaxLossRate = parseFloat(container.querySelector('#aBookMaxLossRate').value) / 100;
+                
+                container.querySelector('#monthlyNewTradersValue').textContent = monthlyNewTraders;
+                container.querySelector('#cacValue').textContent = formatCurrency(cac);
+                container.querySelector('#passRate1StepValue').textContent = (passRate1Step * 100).toFixed(1);
+                container.querySelector('#passRate2StepP1Value').textContent = (passRate2StepP1 * 100).toFixed(2);
+                container.querySelector('#passRate2StepP2Value').textContent = (passRate2StepP2 * 100).toFixed(1);
+                container.querySelector('#resetRateValue').textContent = (resetRate * 100).toFixed(0);
+                container.querySelector('#payoutAchievementRateValue').textContent = (payoutAchievementRate * 100).toFixed(1);
+                container.querySelector('#avgMonthlyProfitValue').textContent = (avgMonthlyProfit * 100).toFixed(1);
+                container.querySelector('#firmProfitSplitValue').textContent = (firmProfitSplit * 100).toFixed(0);
+                container.querySelector('#aBookAllocationValue').textContent = (aBookAllocation * 100).toFixed(0);
+                container.querySelector('#aBookMaxLossRateValue').textContent = (aBookMaxLossRate * 100).toFixed(0);
+
+                const techFees = 6000;
+                const gaCosts = 0.10;
+                const maxLossPercentage = 0.08;
+                const accountMix = { '50k': 0.25, '100k': 0.50, '200k': 0.25 };
+                const accountFees = { '50k': 300, '100k': 500, '200k': 950 };
+                const accountSizes = { '50k': 50000, '100k': 100000, '200k': 200000 };
+                const challengeMix = { '1-step': 0.5, '2-step': 0.5 };
+                const addOnRevenuePerTrader = 25;
+                const resetFeePercentage = 0.80;
+
+                const passRate2Step = passRate2StepP1 * passRate2StepP2;
+                const weightedAvgPassRate = (challengeMix['1-step'] * passRate1Step) + (challengeMix['2-step'] * passRate2Step);
+                
+                let avgFee = 0;
+                let avgSize = 0;
+                for (const key in accountMix) {
+                    avgFee += accountMix[key] * accountFees[key];
+                    avgSize += accountMix[key] * accountSizes[key];
+                }
+
+                let cumulativePayoutTraders = 0, cumulativeABookProfitMakers = 0, annualTotalRevenue = 0, annualGrossFeeRevenue = 0, annualAncillaryRevenue = 0, annualBBookProfit = 0, annualABookProfit = 0, annualTraderPayouts = 0, annualMarketingCost = 0, annualGACost = 0, annualTotalOpex = 0, annualABookLosses = 0, annualFeeRefunds = 0;
+
+                for (let month = 1; month <= 12; month++) {
+                    const numPassed = monthlyNewTraders * weightedAvgPassRate;
+                    const numFailed = monthlyNewTraders - numPassed;
+                    const newPayoutTraders = numPassed * payoutAchievementRate;
+                    cumulativePayoutTraders += newPayoutTraders;
+                    const numPlacedOnABook = numPassed * aBookAllocation;
+                    const newABookLossMakers = numPlacedOnABook * aBookMaxLossRate;
+                    const newABookProfitMakers = numPlacedOnABook - newABookLossMakers;
+                    cumulativeABookProfitMakers += newABookProfitMakers;
+                    const grossFeeRevenue = monthlyNewTraders * avgFee;
+                    const resetRevenue = numFailed * resetRate * avgFee * resetFeePercentage;
+                    const addOnRevenue = monthlyNewTraders * addOnRevenuePerTrader;
+                    const grossBBookTradingProfit = cumulativePayoutTraders * avgSize * avgMonthlyProfit;
+                    const grossABookTradingProfit = cumulativeABookProfitMakers * avgSize * avgMonthlyProfit;
+                    const monthlyTotalRevenue = grossFeeRevenue + resetRevenue + addOnRevenue + grossBBookTradingProfit + grossABookTradingProfit;
+                    const bBookTraderPayouts = grossBBookTradingProfit * (1 - firmProfitSplit);
+                    const aBookTraderPayouts = grossABookTradingProfit * (1 - firmProfitSplit);
+                    const monthlyTraderPayouts = bBookTraderPayouts + aBookTraderPayouts;
+                    const marketingCost = monthlyNewTraders * cac;
+                    const monthlyFeeRefunds = numPassed * avgFee;
+                    const monthlyABookLosses = newABookLossMakers * avgSize * maxLossPercentage;
+                    const monthlyGACosts = monthlyTotalRevenue * gaCosts;
+                    
+                    annualGrossFeeRevenue += grossFeeRevenue;
+                    annualAncillaryRevenue += (resetRevenue + addOnRevenue);
+                    annualBBookProfit += grossBBookTradingProfit;
+                    annualABookProfit += grossABookTradingProfit;
+                    annualTotalRevenue += monthlyTotalRevenue;
+                    annualTraderPayouts += monthlyTraderPayouts;
+                    annualMarketingCost += marketingCost;
+                    annualFeeRefunds += monthlyFeeRefunds;
+                    annualABookLosses += monthlyABookLosses;
+                    annualGACost += monthlyGACosts;
+                }
+                
+                const annualTechCost = techFees * 12;
+                annualTotalOpex = annualMarketingCost + annualFeeRefunds + annualABookLosses + annualTechCost + annualGACost;
+                const annualGrossProfit = annualTotalRevenue - annualTraderPayouts;
+                const annualEbitda = annualGrossProfit - annualTotalOpex;
+                
+                container.querySelector('#fs-gross-fees').textContent = formatCurrency(annualGrossFeeRevenue);
+                container.querySelector('#fs-ancillary-revenue').textContent = formatCurrency(annualAncillaryRevenue);
+                container.querySelector('#fs-bbook-profit').textContent = formatCurrency(annualBBookProfit);
+                container.querySelector('#fs-abook-profit').textContent = formatCurrency(annualABookProfit);
+                container.querySelector('#fs-total-revenue').textContent = formatCurrency(annualTotalRevenue);
+                container.querySelector('#fs-payouts').textContent = formatCurrency(annualTraderPayouts, true);
+                container.querySelector('#fs-gross-profit').textContent = formatCurrency(annualGrossProfit);
+                container.querySelector('#fs-marketing').textContent = formatCurrency(annualMarketingCost, true);
+                container.querySelector('#fs-refunds').textContent = formatCurrency(annualFeeRefunds, true);
+                container.querySelector('#fs-abook-losses').textContent = formatCurrency(annualABookLosses, true);
+                container.querySelector('#fs-tech').textContent = formatCurrency(annualTechCost, true);
+                container.querySelector('#fs-ga').textContent = formatCurrency(annualGACost, true);
+                container.querySelector('#fs-total-opex').textContent = formatCurrency(annualTotalOpex, true);
+                const fsEbitdaEl = container.querySelector('#fs-ebitda');
+                fsEbitdaEl.textContent = formatCurrency(annualEbitda);
+                fsEbitdaEl.classList.toggle('profit', annualEbitda >= 0);
+                fsEbitdaEl.classList.toggle('loss', annualEbitda < 0);
+            }
+            inputs.forEach(input => input.addEventListener('input', calculateProfitability));
+            calculateProfitability();
+            
+            const accordions = container.querySelectorAll('.accordion-item');
+            accordions.forEach(item => {
+                const header = item.querySelector('.accordion-header');
+                const content = item.querySelector('.accordion-content');
+                header.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    if (!isActive) {
+                        item.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    } else {
+                         item.classList.remove('active');
+                         content.style.maxHeight = null;
+                    }
+                });
+            });
+        }
+
+        function initializeBrokerageCalculator() {
+            const container = document.getElementById('brokerage-calculator');
+            if (!container) return;
+            const inputs = container.querySelectorAll('input');
+            if (inputs.length === 0) return;
+            
+            function formatCurrency(value) {
+                const isNegative = value < 0;
+                const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(Math.abs(value));
+                return isNegative ? `(${formatted.replace('$', '')})` : formatted;
+            }
+
+            function calculate() {
+                const initialUsers = parseFloat(container.querySelector('#initialUsers').value) || 0;
+                const avgTradingCapital = parseFloat(container.querySelector('#avgTradingCapital').value) || 0;
+                const avgMonthlyVolume = parseFloat(container.querySelector('#avgMonthlyVolume').value) || 0;
+                const aBookSplit = parseFloat(container.querySelector('#aBookSplit').value) || 0;
+                const bBookNetPNLCaptureRate = parseFloat(container.querySelector('#bBookNetPNLCaptureRate').value) || 0;
+                const positionsHeldOvernight = parseFloat(container.querySelector('#positionsHeldOvernight').value) || 0;
+                const avgABookSpreadMarkup = parseFloat(container.querySelector('#avgABookSpreadMarkup').value) || 0;
+                const avgBBookSpread = parseFloat(container.querySelector('#avgBBookSpread').value) || 0;
+                const avgCommissionPerLot = parseFloat(container.querySelector('#avgCommissionPerLot').value) || 0;
+                const avgSwapRevenuePerLotDay = parseFloat(container.querySelector('#avgSwapRevenuePerLotDay').value) || 0;
+                const monthlyFixedOpEx = parseFloat(container.querySelector('#monthlyFixedOpEx').value) || 0;
+                const variableCostsPercent = parseFloat(container.querySelector('#variableCostsPercent').value) || 0;
+                const initialNewUsers = parseFloat(container.querySelector('#initialNewUsers').value) || 0;
+                const userGrowthRate = parseFloat(container.querySelector('#userGrowthRate').value) / 100 || 0;
+                const cac = parseFloat(container.querySelector('#brokerage_cac').value) || 0;
+                const monthlyChurnRate = parseFloat(container.querySelector('#monthlyChurnRate').value) / 100 || 0;
+                
+                container.querySelector('#aBookSplitValue').textContent = `${aBookSplit}% A-Book`;
+                container.querySelector('#bBookNetPNLCaptureRateValue').textContent = `${bBookNetPNLCaptureRate}%`;
+                container.querySelector('#positionsHeldOvernightValue').textContent = `${positionsHeldOvernight}%`;
+                container.querySelector('#variableCostsPercentValue').textContent = `${variableCostsPercent}%`;
+                container.querySelector('#monthlyChurnRateValue').textContent = `${(monthlyChurnRate * 100).toFixed(0)}%`;
+                container.querySelector('#userGrowthRateValue').textContent = `${(userGrowthRate * 100).toFixed(0)}%`;
+
+                let currentUserBase = initialUsers, totalNewUsersAcquired = 0, monthlyNewUsers = initialNewUsers;
+                for (let i = 0; i < 12; i++) {
+                    currentUserBase -= currentUserBase * monthlyChurnRate;
+                    currentUserBase += monthlyNewUsers;
+                    totalNewUsersAcquired += monthlyNewUsers;
+                    monthlyNewUsers *= (1 + userGrowthRate);
+                }
+                const averageUsers = (initialUsers + currentUserBase) / 2;
+                const totalAnnualVolumeLots = averageUsers * avgMonthlyVolume * 12;
+                const aBookVolumeLots = totalAnnualVolumeLots * (aBookSplit / 100);
+                const bBookVolumeLots = totalAnnualVolumeLots * (1 - aBookSplit / 100);
+                const totalABookRevenue = aBookVolumeLots * (avgABookSpreadMarkup * 10 + avgCommissionPerLot);
+                const bBookSpreadRevenue = bBookVolumeLots * avgBBookSpread * 10;
+                const netPandLRevenue = (averageUsers * (1 - aBookSplit / 100) * avgTradingCapital) * (bBookNetPNLCaptureRate / 100);
+                const totalBBookRevenue = bBookSpreadRevenue + netPandLRevenue;
+                const swapRevenue = (totalAnnualVolumeLots / 260) * (positionsHeldOvernight / 100) * avgSwapRevenuePerLotDay * 260;
+                const totalRevenue = totalABookRevenue + totalBBookRevenue + swapRevenue;
+                const totalMarketingCost = totalNewUsersAcquired * cac;
+                const totalVariableCosts = totalRevenue * (variableCostsPercent / 100);
+                const totalCosts = (monthlyFixedOpEx * 12) + totalMarketingCost + totalVariableCosts;
+                const ebitda = totalRevenue - totalCosts;
+                const netProfit = ebitda * (1 - 0.095);
+                
+                container.querySelector('#annual-table-revenue-abook').textContent = formatCurrency(totalABookRevenue);
+                container.querySelector('#annual-table-revenue-bbook').textContent = formatCurrency(totalBBookRevenue);
+                container.querySelector('#annual-table-revenue-swap').textContent = formatCurrency(swapRevenue);
+                container.querySelector('#annual-table-revenue-total').textContent = formatCurrency(totalRevenue);
+                container.querySelector('#annual-table-costs-staff').textContent = formatCurrency((monthlyFixedOpEx * 12) * 0.7, true);
+                container.querySelector('#annual-table-costs-tech').textContent = formatCurrency((monthlyFixedOpEx * 12) * 0.3, true);
+                container.querySelector('#annual-table-costs-marketing').textContent = formatCurrency(totalMarketingCost, true);
+                container.querySelector('#annual-table-costs-liquidity').textContent = formatCurrency(totalVariableCosts * 0.4, true);
+                container.querySelector('#annual-table-costs-psp').textContent = formatCurrency(totalVariableCosts * 0.6, true);
+                container.querySelector('#annual-table-costs-total').textContent = formatCurrency(totalCosts, true);
+                const ebitdaEl = container.querySelector('#annual-table-ebitda');
+                ebitdaEl.textContent = formatCurrency(ebitda);
+                ebitdaEl.classList.toggle('profit', ebitda >= 0);
+                ebitdaEl.classList.toggle('loss', ebitda < 0);
+                const netProfitEl = container.querySelector('#annual-table-netprofit');
+                netProfitEl.textContent = formatCurrency(netProfit);
+                netProfitEl.classList.toggle('profit', netProfit >= 0);
+                netProfitEl.classList.toggle('loss', netProfit < 0);
+            }
+            inputs.forEach(input => input.addEventListener('input', calculate));
+            calculate();
+
+            const accordions = container.querySelectorAll('.accordion-item');
+            accordions.forEach(item => {
+                const header = item.querySelector('.accordion-header');
+                const content = item.querySelector('.accordion-content');
+                header.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    if (!isActive) {
+                        item.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + "px";
+                    } else {
+                         item.classList.remove('active');
+                         content.style.maxHeight = null;
+                    }
+                });
+            });
+        }
+
+    </script>
+
+</body>
+</html>
