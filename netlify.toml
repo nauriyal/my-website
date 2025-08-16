@@ -1,0 +1,15 @@
+# This is a configuration file for Netlify.
+
+# This section tells Netlify where your website's files are.
+# The "publish" directory is the folder Netlify will deploy.
+# Since your files are in the root, we set it to "."
+[build]
+  publish = "."
+
+# This section controls how Netlify handles page redirects.
+# By keeping it simple, we ensure Netlify serves your HTML files directly
+# without any conflicting rules that might cause a 404 error.
+[[redirects]]
+  from = "/community"
+  to = "/community.html"
+  status = 200
