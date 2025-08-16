@@ -184,8 +184,8 @@
         const feedbackSubmitButton = document.getElementById('feedback-submit-button');
         const feedbackFormMessage = document.getElementById('feedback-form-message');
         
-        // IMPORTANT: Replace this with your new Google Apps Script URL for community feedback
-        const FEEDBACK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxYBPf6NX2rDHjtJnIyW7P-2aYFOxuZUkOrx6vAOcBXB5XkQZdLv_LS_dh10W5YhnSX/exec';
+        // IMPORTANT: Replace this with your NEW Google Apps Script URL
+        const FEEDBACK_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAZ0gCwbOOc80YkVxRfob22HCpapOrKYi0YKmFFhkR6KEuppxid2GwNRoqlfFP1NTFIw/exec';
 
         feedbackForm.addEventListener('submit', function (e) {
             e.preventDefault();
@@ -195,11 +195,20 @@
             feedbackFormMessage.textContent = '';
             feedbackFormMessage.classList.remove('text-green-400', 'text-red-400');
 
-            fetch(FEEDBACK_SCRIPT_URL, { method: 'POST', body: new FormData(feedbackForm), mode: 'no-cors' })
-            .then(() => {
-                feedbackFormMessage.textContent = 'Thank you for your feedback! We truly appreciate it.';
-                feedbackFormMessage.classList.add('text-green-400');
-                feedbackForm.reset();
+            fetch(FEEDBACK_SCRIPT_URL, {
+                method: 'POST',
+                body: new FormData(feedbackForm),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result === 'success') {
+                    feedbackFormMessage.textContent = 'Thank you for your feedback! We truly appreciate it.';
+                    feedbackFormMessage.classList.add('text-green-400');
+                    feedbackForm.reset();
+                } else {
+                    // This will catch errors reported by the Google Script itself
+                    throw new Error(data.error || 'The script returned an unknown error.');
+                }
             })
             .catch(error => {
                 feedbackFormMessage.textContent = 'An error occurred. Please try again later.';
@@ -216,4 +225,3 @@
 
 </body>
 </html>
-
